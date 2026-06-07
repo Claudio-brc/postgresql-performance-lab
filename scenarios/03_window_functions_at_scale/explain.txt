@@ -1,0 +1,20 @@
+BEFORE WORK_MEM:
+
+WindowAgg
+Run Condition: (row_number() OVER (?) <= 1000)
+
+Sort Method: external merge
+Disk: 2992kB
+
+Execution Time: 246 ms
+
+
+AFTER WORK_MEM:
+
+WindowAgg
+Run Condition: (row_number() OVER (?) <= 1000)
+
+Sort Method: quicksort
+Memory: 5292kB
+
+Execution Time: 209 ms

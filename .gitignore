@@ -1,0 +1,25 @@
+# Node
+node_modules/
+dist/
+
+# Variables de entorno
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PostgreSQL local 
+postgres_data/
+data/
+pgdata/
+
+# Datasets
+datasets/

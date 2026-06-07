@@ -1,0 +1,15 @@
+OFFSE 50000:
+
+Index Scan using idx_posts_creation_date
+
+actual rows=51239
+
+Execution Time: 291 ms
+
+Keyset:
+
+Index Scan using idx_posts_creation_date
+
+actual rows=102
+
+Execution Time: 2.6 ms

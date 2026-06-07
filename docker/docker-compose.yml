@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+
+    container_name: pg-performance-lab
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: performance_lab
+
+    ports:
+      - "5434:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+      - ../datasets:/datasets
+
+volumes:
+  postgres_data:

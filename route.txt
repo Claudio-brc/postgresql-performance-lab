@@ -1,0 +1,39 @@
+01. Analytics Query Optimization
+    - joins
+    - aggregations
+    - cardinality reduction
+    - execution plans
+    - aggregate first / join later
+
+02. Pagination Catastrophe
+    - OFFSET/LIMIT
+    - keyset pagination
+    - feed queries
+    - joins + sorting
+    - scalability problems
+
+03. Window Functions at Scale
+    - ROW_NUMBER()
+    - RANK()
+    - DENSE_RANK()
+    - large sorts
+    - execution plans
+
+04. Cardinality & Planner Decisions
+    - estimated rows vs actual rows
+    - planner choices
+    - ANALYZE
+    - statistics
+    - bad estimates
+
+05. Materialized Views for Analytics
+    - reporting workloads
+    - refresh strategies
+    - benchmark comparison
+    - pre-aggregation
+
+06. Partitioning Basics
+    - range partitioning
+    - partition pruning
+    - large-table strategies
+    - time-series style datasets
