@@ -84,4 +84,33 @@ SELECT
     );
 
 --16kb
+
+analyze users;
+
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT *
+FROM users
+WHERE reputation > 10000;
+
+/*
+"Bitmap Heap Scan on users  (cost=4.95..243.80 rows=68 width=42) (actual time=0.025..0.133 rows=90 loops=1)"
+"  Recheck Cond: (reputation > 10000)"
+"  Heap Blocks: exact=71"
+"  Buffers: shared hit=74"
+"  ->  Bitmap Index Scan on idx_users_reputation  (cost=0.00..4.93 rows=68 width=0) (actual time=0.010..0.011 rows=90 loops=1)"
+"        Index Cond: (reputation > 10000)"
+"        Buffers: shared hit=3"
+"Planning:"
+"  Buffers: shared hit=54"
+"Planning Time: 0.401 ms"
+"Execution Time: 0.158 ms"
+*/
+
+DROP INDEX idx_users_reputation
+
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT *
+FROM users
+WHERE reputation > 10000;
+
 	
