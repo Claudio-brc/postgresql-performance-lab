@@ -1,14 +1,19 @@
 {
   "name": "postgresql-performance-lab",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Hands-on PostgreSQL performance tuning lab using real-world Stack Exchange datasets.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "import:xml": "node scripts/import/parse-users.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "postgresql",
+    "performance",
+    "sql",
+    "database",
+    "execution-plans"
+  ],
+  "author": "Claudio Azor Alavez",
+  "license": "MIT",
   "dependencies": {
     "fast-xml-parser": "^5.8.0"
   }
