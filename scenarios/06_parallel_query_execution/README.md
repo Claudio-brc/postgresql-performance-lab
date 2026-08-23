@@ -1,48 +1,47 @@
-# 06 - Parallel Query Execution
+# Parallel Query Execution
 
 ## Objective
 
-Understand how PostgreSQL executes queries using multiple workers and how the planner decides whether parallel execution is beneficial.
-
----
+This scenario examines how PostgreSQL decides when parallel execution is worth
+using, including worker coordination and aggregation cardinality.
 
 ## Dataset
 
-### posts
+- posts: approximately 243k rows, approximately 56 MB
+- users: approximately 248k rows, approximately 24 MB
 
-- ~243k rows
-- ~56 MB
+## Experiment
 
-### users
+The SQL first inspects parallel settings, then runs a global `SUM(view_count)`
+with normal settings and again with `max_parallel_workers_per_gather = 0`. It
+continues with a high-cardinality `GROUP BY owner_user_id`, a low-cardinality
+`GROUP BY post_type_id`, and a filtered `COUNT(*)`.
 
-- ~248k rows
-- ~24 MB
+## Execution Behavior
 
----
+The historical plans included Parallel Seq Scan, Partial Aggregate, Finalize
+Aggregate, Gather, and Gather Merge. PostgreSQL can split suitable scans among
+workers, combine partial results, and choose between serial and parallel plans
+based on estimated costs.
 
-## Problem
+## Historical Observations
 
-Large table scans can become expensive when executed by a single process.
+The historical local run used parallel scans and partial aggregation for
+suitable global and low-cardinality aggregates. The serial global aggregate was
+faster on that machine. The `owner_user_id` grouping produced roughly 64k groups
+and used serial HashAggregate, while `post_type_id` produced about five groups
+and was parallelized. The filtered count was also suitable for partial
+aggregation.
 
-PostgreSQL can distribute work across multiple workers, but parallel execution introduces coordination overhead.
+## Findings
 
-The objective of this scenario is to understand:
+Parallel execution is not automatically faster. PostgreSQL estimates whether
+the expected reduction in work justifies worker startup, coordination, and
+result-combination overhead. Aggregation cardinality influenced the planner
+behavior observed in this experiment.
 
-- Parallel Seq Scan
-- Partial Aggregation
-- Gather
-- Gather Merge
-- Planner Decisions
+## Reproducibility Note
 
----
-
-## Key Concepts
-
-- Parallel Query Execution
-- Workers
-- Parallel Seq Scan
-- Partial Aggregate
-- Gather
-- Gather Merge
-- Aggregation Strategies
-- Planner Cost Estimation
+`historical-results.md` preserves local observations from the original
+experiment. Parallel plan selection and timing depend on configuration,
+available workers, table size, and runtime conditions.
