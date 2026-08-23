@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Hands-on PostgreSQL performance tuning lab using real-world Stack Exchange datasets.",
   "scripts": {
-    "import:xml": "node scripts/import/parse-users.js"
+    "convert:dataset": "node scripts/parse_users.js && node scripts/parse_posts.js"
   },
   "keywords": [
     "postgresql",
