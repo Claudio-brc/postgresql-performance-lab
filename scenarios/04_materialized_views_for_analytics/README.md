@@ -1,51 +1,55 @@
-# 04 - Materialized Views for Analytics
+# Materialized Views for Analytics
 
 ## Objective
 
-Understand how Materialized Views can improve the performance of analytical workloads by precomputing expensive aggregations.
-
----
+This scenario examines how a Materialized View can reduce read latency for a
+repeated analytical query by precomputing an aggregation.
 
 ## Dataset
 
-- users: ~248k rows
-- posts: ~243k rows
-
----
+- users: approximately 248k rows
+- posts: approximately 243k rows
 
 ## Business Question
 
-Who are the most influential users based on:
-
-- number of posts
-- total views
-- average score
-
----
+Who are the most influential users based on post count, total views, and
+average score?
 
 ## Problem
 
-Analytical queries often require:
+Answering this question directly requires joining `users` and `posts`,
+aggregating the result, sorting it, and repeating that work for each query.
 
-- joins
-- aggregations
-- sorting
+## Solution / Experiment
 
-When executed repeatedly, these operations can become expensive.
+The experiment creates `mv_user_influence`, a Materialized View that physically
+stores the precomputed user-level aggregation. A descending index on
+`total_views` supports the Top-50 query against the materialized result.
 
----
+The direct query and the Materialized View return the same influence metrics,
+but the latter reads stored results rather than repeating the join and
+aggregation on every request.
 
-## Solution
+## Historical Results
 
-Use a Materialized View to precompute aggregated data and serve queries directly from stored results.
+The original local experiment observed approximately 780 ms for the analytics
+query, 2615 ms for refresh, and 0.138 ms for the indexed Materialized View
+query. These are historical local measurements, not current or universally
+reproducible benchmarks; see `historical-results.md`.
 
----
+## Refresh Trade-off
 
-## Key Concepts
+Materialized Views are not refreshed automatically. `REFRESH MATERIALIZED VIEW`
+recomputes and stores the aggregation, introducing additional work and leaving
+the stored data stale until refresh occurs. They are most useful when reads are
+frequent and freshness requirements allow that trade-off.
 
-- Materialized Views
-- Aggregations
-- Analytics Workloads
-- Refresh Strategy
-- Read vs Refresh Trade-off
-- Execution Plans
+## Findings
+
+- Materialized Views physically store precomputed results.
+- Query execution changed from repeated join and aggregation work to indexed
+  reads over stored data.
+- The read-latency benefit is balanced by refresh cost and data freshness.
+
+Materialized Views do not eliminate computation; they move it from query time
+to refresh time.
