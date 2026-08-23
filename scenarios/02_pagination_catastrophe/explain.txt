@@ -1,4 +1,4 @@
-OFFSE 50000:
+OFFSET 50000:
 
 Index Scan using idx_posts_creation_date
 
